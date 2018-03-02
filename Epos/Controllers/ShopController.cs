@@ -42,6 +42,7 @@ namespace Epos.Controllers
         }
         #endregion        
 
+
         public IActionResult Dashboard()
         {
             return View();
