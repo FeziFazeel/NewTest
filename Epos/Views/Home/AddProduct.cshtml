@@ -1,0 +1,574 @@
+﻿@model ProductCategoryViewModel
+@{
+    ViewBag.Title = "AddProduct";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    IList<Category> olist = ViewBag.categorylist;
+   // User ouser = (User)Session["Adminobj"];
+    MyContext db = new MyContext();
+    IList<Uom> OListUom = db.Uom.ToList();
+    SelectList SelectListUom = new SelectList(OListUom, Constants.UOMModel.Name, Constants.UOMModel.Name);
+   // IList<Suppliers> OListSupplier = db.Supplier.ToList();
+   // SelectList SelectListSupplier = new SelectList(OListSupplier, Constants.SupplierModel.Id, Constants.SupplierModel.Display);
+    //SelectListItem grp1 = new SelectListItem();
+    //grp1.Text = "gram";
+    //grp1.Value = "gram";
+    //SelectListItem grp2 = new SelectListItem();
+    //grp2.Text = "kg";
+    //grp2.Value = "kg";
+    //SelectListItem grp3 = new SelectListItem();
+    //grp3.Text = "kilo";
+    //grp3.Value = "kilo";
+    //SelectListItem grp4 = new SelectListItem();
+    //grp4.Text = "N/A";
+    //grp4.Value = "N/A";
+    ////SelectListItem grp5 = new SelectListItem();
+    ////grp5.Text = "Group E";
+    ////grp5.Value = "Group E";
+    ////SelectListItem grp6 = new SelectListItem();
+    ////grp6.Text = "Group F";
+    ////grp6.Value = "Group F";
+    ////SelectListItem grp7 = new SelectListItem();
+    ////grp7.Text = "Group G";
+    ////grp7.Value = "Group G";
+    ////SelectListItem grp8 = new SelectListItem();
+    ////grp8.Text = "Group H";
+    ////grp8.Value = "Group H";
+    ////SelectListItem grp9 = new SelectListItem();
+    ////grp9.Text = "Group I";
+    ////grp9.Value = "Group I";
+    ////SelectListItem grp10 = new SelectListItem();
+    ////grp10.Text = "Group J";
+    ////grp10.Value = "Group J";
+    ////SelectListItem grp11 = new SelectListItem();
+    ////grp11.Text = "Group K";
+    ////grp11.Value = "Group L";
+    ////SelectListItem grp12 = new SelectListItem();
+    ////grp12.Text = "Group M";
+    ////grp12.Value = "Group M";
+    //IList<SelectListItem> coursegrouping = new List<SelectListItem>();
+    //coursegrouping.Add(grp1);
+    //coursegrouping.Add(grp2);
+    //coursegrouping.Add(grp3);
+    //coursegrouping.Add(grp4);
+    //coursegrouping.Add(grp5);
+    //coursegrouping.Add(grp6);
+    //coursegrouping.Add(grp7);
+    //coursegrouping.Add(grp8);
+    //coursegrouping.Add(grp9);
+    //coursegrouping.Add(grp10);
+    //coursegrouping.Add(grp10);
+    //coursegrouping.Add(grp11);
+    //coursegrouping.Add(grp12);
+}
+<link href="~/Areas/Admin/ConfigTh/plugins/iCheck/all.css" rel="stylesheet" />
+<link href="~/Areas/Admin/ConfigTh/plugins/DropZone/css/dropzone.css" rel="stylesheet" />
+<section class="content-header">
+    <div class="alert alert-info  col-md-12">
+        <h3 class="text-center header_coustom"><span class="fa fa-th-list"></span> Add/Update Product</h3>
+    </div>
+</section>
+
+<section class="content">
+  @using (Html.BeginForm("AddProduct", "Management", FormMethod.Post, new { @enctype = "multipart/form-data", @id = "files" }))
+  {
+    @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row">
+                        <div class="col-md-8">
+                        <div class="box box-primary">
+                            <div class="box-header with-border" style="text-align:center;">
+                                <h3 class="box-title">Add/Update Product</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2 ">Title*</label>
+                                        <div class="col-md-9">
+                                            @Html.EditorFor(model => model.objProduct.Title, new { htmlAttributes = new { @class = "form-control",@required= "required" } })
+                                            @Html.ValidationMessageFor(model => model.objProduct.Title, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Code*</label>
+                                         <div class="col-md-9">
+                                            @Html.EditorFor(model => model.objProduct.Code, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                                            @Html.ValidationMessageFor(model => model.objProduct.Code, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                         <label class="control-label col-md-1 text-right">Quantity*</label>
+                                               <div class="col-md-3">
+                                                    @Html.EditorFor(model => model.objProduct.Quantity, new { htmlAttributes = new { @class = "form-control", @required = "required", @type = "Number" } })
+                                                    @Html.ValidationMessageFor(model => model.objProduct.Quantity, "", new { @class = "text-danger" })
+                                                </div>
+                                         <label class="control-label col-md-1 text-right">Unit*</label>
+                                                 <div class="col-md-3">
+                                                    @Html.DropDownListFor(model => model.objProduct.Unit, SelectListUom, "Select UOM", new {  @class = "form-control", @required = "required" })
+                                                    @Html.ValidationMessageFor(model => model.objProduct.Unit, "", new { @class = "text-danger" })
+                                                </div>
+                                        <label class="control-label col-md-1 text-right">Sub Items*</label>
+                                        <div class="col-md-3">
+                                            @Html.EditorFor(model => model.objProduct.PackOf, new { htmlAttributes = new { @class = "form-control", @required = "required", @type = "Number",@value=1 } })
+                                            @Html.ValidationMessageFor(model => model.objProduct.PackOf, "", new { @class = "text-danger" })
+                                        </div>
+
+                                       </div>                                                           
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.objProduct.Price,"Price*", htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-9">
+                                        @if (Model != null)
+                                        {
+                                            @Html.EditorFor(model => model.objProduct.Price, new { htmlAttributes = new { @class = "form-control", @type = "Number", @required = "required", @step="any", @Value=Model.objProduct.GetPrice } })
+                                        }
+                                        else
+                                        {
+                                            @Html.EditorFor(model => model.objProduct.Price, new { htmlAttributes = new { @class = "form-control", @type = "Number", @required = "required" } })
+                                        } 
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2 text-right">Stock Level</label>
+                                        <div class="col-md-9">
+                                            @Html.EditorFor(model => model.objProduct.Minimumstocklevel, new { htmlAttributes = new { @class = "form-control",@placeholder="Stcok Level Minimum" } })
+                                            @Html.ValidationMessageFor(model => model.objProduct.Minimumstocklevel, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    @*<div class="form-group">
+                                        <div class="col-md-2"></div>
+                                        <div class="col-md-9">
+                                            @Html.CheckBoxFor(model => model.objProduct.Isfeature) <strong>Is Feature Product</strong>
+                                            @Html.ValidationMessageFor(model => model.objProduct.Isfeature, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-2"></div>
+                                        <div class="col-md-9">
+                                            @Html.CheckBoxFor(model => model.objProduct.Isdiscount,new {@class="Isdiscount"}) <strong>Is Discount Product</strong>
+                                            @Html.ValidationMessageFor(model => model.objProduct.Isdiscount, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group hidden discountdiv">
+                                        <label class="control-label col-md-2 text-right">Discount Price</label>
+                                        <div class="col-md-9">
+                                            @Html.EditorFor(model => model.objProduct.Discountprice, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.objProduct.Discountprice, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>*@
+                                   
+                            @*<div class="form-group">
+                                <label class="control-label col-md-2">Images*</label>
+                                <div class="col-md-10">
+                                    @if (Model != null)
+                                    {
+                                        if (!string.IsNullOrEmpty(Model.objProduct.Image))
+                                        {
+                                            var arrayimages = Model.objProduct.Image.Split(',');
+                                            <span class="imgappendmain">
+                                                @foreach (var item in arrayimages)
+                                                {
+                                                    if (!string.IsNullOrEmpty(item)) {
+                                                <span class="imgspan2 col-md-6" style="margin-top:5px;">
+                                                    <img src="~/Images/ProductImage/@item" style="height:90px;width:130px;" class="img-responsive col-md-6 LogoImg" />
+                                                    <button data-imgname="@item" type="button" class="col-md-3 btn btn-info btn-xs" id="LogoImgRemoveBtn" style="margin-top:30px;">Remove</button>
+
+                                                </span>
+                                                    }
+                                                }
+                                            </span>
+                                            <div class="col-md-12" style="margin-top:5px;">
+                                                <button type="button" class="btn btn-info UpLogoBtn" data-toggle="modal" data-target="#Logomodal"><span class="glyphicon glyphicon-camera"></span> Upload Product Images</button>
+                                            </div>
+                                            <span class="imgappend" style="display:none;">
+                                                <span class="imgspan" style="margin-top:5px;">
+                                                    <img src="" style="height:90px;width:130px;display:none;" class="img-responsive col-md-6 LogoImg" />
+                                                    <button type="button" class="col-md-3 btn btn-info btn-xs" id="LogoImgRemoveBtn" style="margin-top:30px;">Remove</button>
+
+                                                </span>
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="imgappendmain">
+                                            </span>
+                                            <div class="col-md-12" style="margin-top:5px;">
+                                                <button type="button" class="btn btn-info UpLogoBtn" data-toggle="modal" data-target="#Logomodal"><span class="glyphicon glyphicon-camera"></span> Upload Product Images</button>
+                                            </div>
+                                            <span class="imgappend" style="display:none;">
+                                                <span class="imgspan" style="margin-top:5px;">
+                                                    <img src="" style="height:90px;width:130px;display:none;" class="img-responsive col-md-6 LogoImg" />
+                                                    <button type="button" class="col-md-3 btn btn-info btn-xs" id="LogoImgRemoveBtn" style="margin-top:30px;">Remove</button>
+
+                                                </span>
+                                            </span> 
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="imgappendmain">
+                                            </span>
+                                        <div class="col-md-12" style="margin-top:5px;">
+                                            <button type="button" class="btn btn-info UpLogoBtn" data-toggle="modal" data-target="#Logomodal"><span class="glyphicon glyphicon-camera"></span> Upload Product Images</button>
+                                        </div>
+                                                <span class="imgappend" style="display:none;">
+                                                <span class="imgspan" style="margin-top:5px;">
+                                                    <img src="" style="height:90px;width:130px;display:none;" class="img-responsive col-md-6 LogoImg" />
+                                                    <button type="button" class="col-md-3 btn btn-info btn-xs" id="LogoImgRemoveBtn" style="margin-top:30px;">Remove</button>
+
+                                                </span>
+                                            </span>
+                                            }
+
+                                            @Html.EditorFor(model => model.objProduct.Image, new { htmlAttributes = new { @class = "form-control product_images hidden" } })
+                                            @Html.ValidationMessageFor(model => model.objProduct.Image, "", new { @class = "text-danger" })
+
+</div>
+                            </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2 text-right">Supplier*</label>
+                                        <div class="col-md-9">
+                                            @Html.DropDownListFor(model => model.objProduct.Idsupplier, SelectListSupplier, "Choose a Supplier", new {@class = "form-control" })
+
+                                            @Html.ValidationMessageFor(model => model.objProduct.Idsupplier, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>*@
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.objProduct.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-9">
+                                           @Html.TextAreaFor(model => model.objProduct.Description, new { rows = 10, columns = 40 ,@class= "form-control" })
+                                           @Html.ValidationMessageFor(model => model.objProduct.Description, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    @if (Model != null)
+                                    {
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Status</label>
+                                            <div class="col-md-9">
+
+                                                @if (Model.objProduct.Status == 1)
+                                                {
+                                                    @Html.CheckBox("IsStatus", new { @class = "CkBIsFeatured flat-red", @checked = true })
+                                                    @Html.EditorFor(model => model.objProduct.Status, new { htmlAttributes = new { @class = "form-control hidden abc" } })
+
+                                                }
+                                                else
+                                                {
+                                                    @Html.CheckBox("IsStatus", new { @class = "CkBIsFeatured flat-red" })
+                                                    @Html.EditorFor(model => model.objProduct.Status, new { htmlAttributes = new { @class = "form-control hidden abc" } })
+                                                }
+                                                @Html.ValidationMessageFor(model => model.objProduct.Status, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group hidden">
+                                            @Html.LabelFor(model => model.objProduct.Id, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-9">
+                                                @Html.EditorFor(model => model.objProduct.Id, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.objProduct.Id, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group hidden">
+                                            @Html.LabelFor(model => model.objProduct.Createddate, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-9">
+                                                @Html.EditorFor(model => model.objProduct.Createddate, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.objProduct.Createddate, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group hidden">
+                                            @Html.LabelFor(model => model.objProduct.Createdby, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-9">
+                                                @Html.EditorFor(model => model.objProduct.Createdby, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.objProduct.Createdby, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                       
+
+                                    }
+                                    <div class="form-group">
+                                        <input type="hidden" name="arraycategories" value="" id="arraycategories" />
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="box-footer">
+                                <div class="form-group">
+                                    <div class="col-md-11">
+                                        <input onclick="return categoriesfunction();" type="submit" value="Save" class="btn btn-info pull-right" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                 @if (olist.Count > 0) { 
+                        <div class="col-md-4">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">List Of Categories</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="col-md-12" style="max-height:350px;overflow:auto;">
+                                        <div class="form-horizontal">
+                                            <div class="list-group">
+
+                                                @foreach (Category item in olist)
+                                                {
+                                                IList<Category> ocatagory = null;
+                                                if (item.Idparent == null)
+                                                {
+                                                        <a href="#" class="list-group-item">
+
+                                                            @Html.CheckBox("isNewlyEnrolled", false, new { @class = "minimal-red" , Value = item.Id }) &nbsp;&nbsp;&nbsp; @item.Name
+                                                        </a>
+                                                    ocatagory = (from obj in olist
+                                                                 where obj.Idparent.Equals(item.Id)
+                                                                 select obj).ToList();
+                                                }
+
+
+                                                if (ocatagory != null)
+                                                {
+                                                    foreach (Category item2 in ocatagory)
+                                                    {
+                                                        if (item2.Idparent != null)
+                                                        {
+                                                                <a href="#" class="list-group-item">
+                                                                    <span style="margin-left:20px;">
+                                                                        @Html.CheckBox("isNewlyEnrolled", false, new { @class = "minimal-red", Value = item2.Id }) &nbsp;&nbsp;&nbsp; @item2.Name
+                                                                    </span>
+                                                                </a>
+                                                            IList<Category> ocatagory2 = (from obj in olist
+                                                                                          where obj.Idparent.Equals(item2.Id)
+                                                                                          select obj).ToList();
+                                                            if (ocatagory2.Count() > 0)
+                                                            {
+                                                                foreach (Category item3 in ocatagory2)
+                                                                {
+                                                                        <a href="#" class="list-group-item">
+                                                                            <span style="margin-left:40px;">
+                                                                                @Html.CheckBox("isNewlyEnrolled", false, new { @class = "minimal-red", Value = item3.Id }) &nbsp;&nbsp;&nbsp;  @item3.Name
+                                                                            </span>
+                                                                        </a>
+                                                                }
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                                <a href="#" class="list-group-item" style="margin-left:20px;">
+                                                                    @Html.CheckBox("isNewlyEnrolled", false, new { @class = "minimal-red", Value = item.Id }) &nbsp;&nbsp;&nbsp;   @item2.Name
+                                                                </a>
+                                                        }
+                                                    }
+                                                }
+
+                                            }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+        </div>
+    }
+    <div id="Logomodal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Upload Product Images</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <form action="@Url.Action("SavaProductImage","Management")" method="post" enctype="multipart/form-data" class="dropzone" id="DropzoneLogo">
+                            <div class="fallback">
+                                <input name="file" type="file" multiple />
+                            </div>
+                            <div class="dz-message">
+                                Drop files here or click to upload.
+                                <br> <span class="note">(Image Size <strong>271*300</strong>)</span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer" >
+                    <button style="margin-top:5px;" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section scripts{
+<script src="~/Areas/Admin/ConfigTh/plugins/iCheck/icheck.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.minimal-red').iCheck({
+                checkboxClass: 'icheckbox_square-red',
+                radioClass: 'iradio_square-red',
+                increaseArea: '20%' // optional
+            });
+        });
+</script>
+    <script>
+        var Arrayidcategories = new Array();
+        
+        function categoriesfunction() {
+            $(".minimal-red").each(function () {
+                if ($(this).is(':checked')) {
+                    //alert($(this).val());
+               
+                    //var closestdiv2 = $(this).find(".itme-td");
+                    //alert($(this).val());
+
+                    jsonidcategory = {
+                        "Idcategory": $(this).val(),
+                    };
+                    Arrayidcategories.push(jsonidcategory);
+                }
+            });
+            if ($(".product_images").val()!=""){
+            if (Arrayidcategories!=null && Arrayidcategories!=""){
+            jsonobj = {
+                "objRelationship": Arrayidcategories,
+            };
+        
+            $("#arraycategories").val(JSON.stringify(jsonobj));
+            console.log(JSON.stringify(jsonobj));
+            return true;
+            } else {
+                alert("Please Choose a categories")
+                return false;
+            }
+            } else {
+                alert("Product Image must be required")
+                return false;
+            }
+        }
+       
+    </script>
+    <script>
+        $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+            checkboxClass: 'icheckbox_flat-green',
+            radioClass: 'iradio_flat-green'
+        });
+        $('#IsStatus').on('ifChecked', function () {
+            $('.abc').val(true);
+        });
+        $('#IsStatus').on('ifUnchecked', function () {
+            $('.abc').val(false);
+        });
+    </script>
+<script src="~/Areas/Admin/ConfigTh/plugins/DropZone/js/dropzone.js"></script>
+<script>
+        $(function () {
+            var DropzoneLogo;
+            Dropzone.autoDiscover = false;
+
+            DropzoneLogo = new Dropzone("#DropzoneLogo", {
+                paramName: "file",
+                addRemoveLinks: true,
+                maxFiles: 5,
+                acceptedFiles: "image/*",
+                accept: function (file, done) {
+                    console.log("uploaded");
+                    done();
+                },
+                init: function () {
+                    this.on("maxfilesexceeded", function (file) {
+                    });
+                    this.on("removedfile", function (file) {
+                        var name = $(".product_images").val();
+                        //if (name != "") {
+                        //    $.ajax({
+                        //        type: 'POST',
+                        //        url: '/Admin/Admin/RemoveRestaurantLogoImage',
+                        //        data: {
+                        //            filename: name,
+                        //        },
+                        //        success: function (data) {
+                        //            $("#LogoImage").val("");
+                        //            $(".LogoImg").hide();
+                        //            $("#LogoImgRemoveBtn").hide();
+                        //            $(".UpLogoBtn").show();
+
+                        //        }
+                        //    });
+                        //}
+                    });
+                }
+            });
+            DropzoneLogo.on("success", function (file, result) {
+               
+                var name = $(".product_images").val();
+               // alert(name);
+                if (name == "") {
+                   // alert(result);
+                    $(".product_images").val(result);
+                } else {
+
+                    $(".product_images").val(name + "," + result);
+                }
+                $(".LogoImg").show();
+                //$("#LogoImgRemoveBtn").show();
+                // $(".UpLogoBtn").hide();
+                $(".imgappendmain").append($(".imgappend").html())
+                var SpanImg = $(".imgappendmain").find(".imgspan");
+                SpanImg.find(".LogoImg").fadeIn("fast").attr('src', '/Images/ProductImage/' + result);
+                SpanImg.find("#LogoImgRemoveBtn").attr('data-imgname', result);
+                SpanImg.attr("class", "imgspan2 col-md-6");
+               // $('#Logomodal').modal('hide');
+            });
+            $(document).on("click", "#LogoImgRemoveBtn", function () {
+                var closestdiv = $(this).closest(".imgspan2");
+                var value = $(this).data("imgname");
+                
+               
+             $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("RemoveProductBanner", "Management")',
+                    data: {
+                        filename: value,
+                    },
+                    success: function (data) {
+                        if (data == "Successfully Delete Image") {
+                            var imges = $(".product_images").val();
+                            var arrimages = imges.split(',');
+                            closestdiv.remove();
+                           $(".product_images").val("");
+                            for (i = 0; i < arrimages.length; ++i) {
+                                // do something with `arrimages[i]`
+                                if (arrimages[i] != "") {
+                                    alert(arrimages[i]);
+                                    if (arrimages[i] == value) {
+                                        alert("Match");
+                                    } else {
+                                        var GetImages = $(".product_images").val();
+                                        $(".product_images").val(GetImages + "," + arrimages[i])
+                                    }
+                                }
+                               
+                            }
+                           // $("#LogoImage").val("");
+                           // $(".LogoImg").hide();
+                           // $("#LogoImgRemoveBtn").hide();
+                           // $(".UpLogoBtn").show();
+                            DropzoneLogo.removeAllFiles(true);
+                        }
+                    }
+                });
+            });
+
+            $(".Isdiscount").click(function () {
+                if ($(this).is(':checked')) {
+
+                    $(".discountdiv").removeClass("hidden");
+                } else {
+
+                    $(".discountdiv").addClass("hidden");
+                }
+            
+            });
+        });
+</script>
+}
+

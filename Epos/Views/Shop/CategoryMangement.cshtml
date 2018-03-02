@@ -1,0 +1,190 @@
+﻿@model Epos.Category
+
+@{
+    ViewBag.Title = "CategoryMangement";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    //User ouser = (User)Session["Adminobj"];
+   // MyContext db = new MyContext();
+    //IList<Category> allcatagory = db.Category.ToList();
+  ///  SelectList Category = new SelectList(allcatagory, Constants.CategoryModel.Id, Constants.CategoryModel.Name);
+    IList<string> objNameCheck = new List<string>();
+    IList<Category> olist = ViewBag.categorylist;
+}
+<link href="~/Areas/Admin/ConfigTh/plugins/iCheck/all.css" rel="stylesheet" />
+<section class="content-header">
+    <div class="alert alert-info  col-md-12">
+        <h3 class="text-center header_coustom"><span class="fa fa-list"></span> Categories Management</h3>
+    </div>
+</section>
+<section class="content">
+    <div class="row">
+
+        @using (Html.BeginForm("CategoryMangement", "Management", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="col-md-6">
+                <div class="col-md-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Add Catagory</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @required= "required" } })
+                                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">Parent</label>
+                                    <div class="col-md-10">
+                                        @Html.DropDownListFor(model=>model.Idparent, Category, "--select Category--", new { @class = "form-control select2", @style = "width: 100%;", @required = "required" })
+                                        @Html.ValidationMessageFor(model => model.Idparent, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-10">
+                                        <button type="submit" class="btn btn-success">SaveOrUpdate</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>   
+        }
+        <div class="col-md-6">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">List Catagory</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12" style="max-height:350px;overflow:auto;">
+                            <div class="form-horizontal">
+                                <div class="list-group">
+                                    @foreach (Category item in olist)
+                                    {
+                                        IList<Category> ocatagory = null;
+                                        if (item.Idparent == null)
+                                        {
+                                            <a href="@Url.Action("CategoryMangement","Management",new { Id=item.Id})" class="list-group-item">
+                                                @Html.CheckBox("isNewlyEnrolled", true, new { @class = "minimal-red" }) &nbsp;&nbsp;&nbsp; @item.Name
+                                                <span class="pull-right glyphicon glyphicon-edit"></span>
+                                            </a>
+                                            ocatagory = (from obj in olist
+                                                         where obj.Idparent.Equals(item.Id)
+                                                         select obj).ToList();
+                                        }
+                                        
+                                        if (ocatagory != null)
+                                        {
+                                            foreach (Category item2 in ocatagory)
+                                            {
+                                                if (item2.Idparent != null)
+                                                {
+                                                    <a href="@Url.Action("CategoryMangement","Management",new { Id=item2.Id})" class="list-group-item">
+                                                        <span style="margin-left:20px;">
+                                                            @Html.CheckBox("isNewlyEnrolled", true, new { @class = "minimal-red" }) &nbsp;&nbsp;&nbsp; @item2.Name
+                                                        </span>
+                                                        <span class="pull-right glyphicon glyphicon-edit"></span>
+                                                    </a>
+                                                    IList<Category> ocatagory2 = (from obj in olist
+                                                                             where obj.Idparent.Equals(item2.Id)
+                                                                             select obj).ToList();
+                                                    if (ocatagory2.Count() > 0)
+                                                    {
+                                                        foreach (Category item3 in ocatagory2)
+                                                        {
+                                                            <a href="@Url.Action("CategoryMangement","Management",new { Id=item3.Id})" class="list-group-item">
+                                                                <span style="margin-left:40px;">
+                                                                    @Html.CheckBox("isNewlyEnrolled", true, new { @class = "minimal-red" }) &nbsp;&nbsp;&nbsp;  @item3.Name
+                                                                </span>
+                                                                <span class="pull-right glyphicon glyphicon-edit"></span>
+                                                            </a>
+                                                            IList<Category> ocatagory3 = (from obj in olist
+                                                                                     where obj.Idparent.Equals(item3.Id)
+                                                                                     select obj).ToList();
+                                                            if (ocatagory3.Count() > 0)
+                                                            {
+                                                                foreach (Category item4 in ocatagory3)
+                                                                {
+                                                                    <a href="@Url.Action("CategoryMangement","Management",new { Id=item4.Id})" class="list-group-item">
+                                                                        <span style="margin-left:60px;">
+                                                                            @Html.CheckBox("isNewlyEnrolled", true, new { @class = "minimal-red" }) &nbsp;&nbsp;&nbsp;  @item4.Name
+                                                                        </span>
+                                                                        <span class="pull-right glyphicon glyphicon-edit"></span>
+                                                                    </a>
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <a href="@Url.Action("CategoryMangement","Management",new { Id=item2.Id})" class="list-group-item">
+                                                        <span style="margin-left:20px;">
+                                                            @Html.CheckBox("isNewlyEnrolled", true, new { @class = "minimal-red" }) &nbsp;&nbsp;&nbsp;   @item2.Name
+                                                        </span>
+                                                    </a>
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+@section scripts{
+<script src="~/Areas/Admin/ConfigTh/plugins/iCheck/icheck.js"></script>
+    <script>
+        $('#Idparent').append($('<option>', {
+            value: '',
+            text: 'None'
+        }));
+    </script>
+<script>
+        $(document).ready(function () {
+            $('.minimal-red').iCheck({
+                checkboxClass: 'icheckbox_square-red',
+                radioClass: 'iradio_square-red',
+                increaseArea: '20%' // optional
+            });
+        });
+</script>
+@*<script>
+        $("#Idparent").change(function () {
+            if ($(this).val() == "") {
+                $(".pdivc").show();
+                $(".bnner").prop('required', true);
+            } else {
+                $(".pdivc").hide();
+                $(".bnner").prop('required', false);
+            }
+        })
+</script>*@
+<script>
+        $(".removeimg").click(function () {
+            $(".upimgdiv").show();
+            $(".removedivimg").hide();
+
+        });
+
+        $(".removeimg2").click(function () {
+            $(".upbandiv").toggle();
+            $(".removedivban").hide();
+
+        });
+</script>
+}

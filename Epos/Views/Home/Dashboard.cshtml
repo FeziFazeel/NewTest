@@ -1,0 +1,168 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    User ouser = (User)Session[Constants.Session.AdminLoggedIn];
+
+}
+<section class="content-header">
+    <div class="alert alert-info  col-md-12">
+        <h3 class="text-center header_coustom"><span class="fa fa-dashboard"></span> Dashboard</h3>
+    </div>
+</section>
+
+<section class="content">
+    <!-- Small boxes (Stat box) -->
+
+    @if (ouser.Role.Trim().ToLower() == Constants.UserRoles.Admin.Trim().ToLower())
+    { 
+    <div class="row">
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-blue-active">
+                <div class="inner">
+                    <h3 class="CashSaleCount">0</h3>
+                    <p>Cash Sales</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-cash"></i>
+                </div>
+                <a href="@Url.Action("PendingOrders","Management")" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-blue-gradient">
+                <div class="inner">
+                    <h3 class="CashSaleAmount">0</h3>
+                    <p>Cash Sales Amount</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-cash"></i>
+                </div>
+                <a href="@Url.Action("PendingOrders","Management")" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-aqua-active">
+                <div class="inner">
+                    <h3 class="CreditSaleCount">0</h3>
+                    <p>Credit Sales</p>
+                </div>
+                <div class="icon">
+                    <i class="ion-ios-paper-outline"></i>
+                </div>
+                <a href="@Url.Action("CategoryMangement","Management")" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-aqua-gradient">
+                <div class="inner">
+                    <h3 class="CreditSaleAmount">0</h3>
+                    <p>Credit Sales Amount</p>
+                </div>
+                <div class="icon">
+                    <i class="ion-ios-paper-outline"></i>
+                </div>
+                <a href="@Url.Action("CategoryMangement","Management")" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-green-gradient">
+                <div class="inner">
+                    <h3 class="RcvdFrmCust">0</h3>
+                    <p>Received From Custaomer</p>
+                </div>
+                <div class="icon">
+                    <i class="ion-person-stalker"></i>
+                </div>
+                <a href="@Url.Action("ViewProduct","Management",new { MinStock=1 })" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <h3 class="CaegoriesCount">0</h3>
+                    <p>Categories</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-android-apps"></i>
+                </div>
+                <a href="@Url.Action("CategoryMangement","Management")" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-green">
+                <div class="inner">
+                    <h3 class="uomcount">0</h3>
+                    <p>UOM</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="@Url.Action("UOM","Management")" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-dark-light">
+                <div class="inner">
+                    <h3 class="ItemsCount">0</h3>
+                    <p>Products</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-pie-graph"></i>
+                </div>
+                <a href="@Url.Action("ViewProduct","Management")" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+     
+
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-red">
+                <div class="inner">
+                    <h3 class="MinStockLevelCount">0</h3>
+                    <p>Minimum Stock Level</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="@Url.Action("ViewProduct","Management",new { MinStock=1 })" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        
+
+        
+    </div>
+    <!-- /.row -->
+    }
+</section>
+
+@section scripts{
+    <script>
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("ReturnDashboardCounts", "Management")',
+            data: {
+
+            },
+            success: function (data) {
+                $(".ItemsCount").text(data.ItemsCount);
+                $(".CaegoriesCount").text(data.CaegoriesCount);
+                $(".uomcount").text(data.uomcount);
+                $(".CashSaleCount").text(data.CashSaleCount);
+                $(".CreditSaleCount").text(data.CreditSaleCount);
+                $(".CashSaleAmount").text(data.CashSaleAmount);
+                $(".CreditSaleAmount").text(data.CreditSaleAmount);
+                $(".RcvdFrmCust").text(data.RcvdFrmCust);
+                $(".MinStockLevelCount").text(data.MinStockLevelCount);
+            }
+        });
+    </script>
+}

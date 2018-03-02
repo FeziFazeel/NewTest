@@ -28,6 +28,13 @@ namespace Epos
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+//This area is filled by Mannually
+//Start
+            services.AddDbContext<MyContext>(options =>
+          options.UseMySQL(Configuration.GetConnectionString("MyConn")));
+            services.AddDistributedMemoryCache();
+            services.AddSession();
+//End
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()

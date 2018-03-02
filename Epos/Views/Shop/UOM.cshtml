@@ -1,0 +1,118 @@
+﻿@model Epos.Uom
+@{
+    SelectListItem Active = new SelectListItem();
+    Active.Text = "Active";
+    Active.Value = "1";
+    SelectListItem InActive = new SelectListItem();
+    InActive.Text = "In-Active";
+    InActive.Value = "2";
+    IList<SelectListItem> ItemStatus = new List<SelectListItem>();
+    ItemStatus.Add(Active);
+    ItemStatus.Add(InActive);
+    ViewBag.Title = "UOM";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<style>
+    .checkbox input[type=checkbox], .checkbox-inline input[type=checkbox], .radio input[type=radio], .radio-inline input[type=radio]{
+        margin-left:0px;
+    }
+</style>
+<section class="content-header">
+    <div class="alert alert-info  col-md-12">
+        <h3 class="text-center header_coustom"><span class="fa fa-list"></span> Units Of Measurement(UOM)</h3>
+    </div>
+</section>
+<section class="content">
+    <div class="row">
+
+        @using (Html.BeginForm("UOM", "Management", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="col-md-6">
+
+                <div class="col-md-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Add Catagory</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control",@requird= "requird" } })
+                                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                
+                                @if (Model != null)
+                                {
+                                    <div class="form-group">
+                                       <label class="control-label col-md-2">Status</label>
+                                        <div class="col-md-10">
+                                            <div class="checkbox">
+                                                @Html.DropDownListFor(model => model.Status,ItemStatus,new {@class= "form-control" })
+                                                @Html.ValidationMessageFor(model => model.Status,"", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group hidden">
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.CreatedDate, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                    <div class="form-group hidden">
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.CreatedBy, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                   
+                                }
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-10">
+                                        <button type="submit" class="btn btn-success">Save Or Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        }
+        @if (ViewBag.OlistUom != null)
+        {
+
+            <div class="col-md-6">
+
+                <div class="col-md-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">List Of UOM</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-md-12" style="max-height:350px;overflow:auto;">
+                                <div class="form-horizontal">
+                                    <div class="list-group">
+                                        @foreach (var item in ViewBag.OlistUom)
+                                        {
+                                            <a href="@Url.Action("UOM","Management",new { Id=item.Id})" class="list-group-item">
+                                                 @item.Name
+                                            <span class="pull-right glyphicon glyphicon-edit"></span>
+                                            </a>
+                                        }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+        }
+    </div>
+</section>
+
